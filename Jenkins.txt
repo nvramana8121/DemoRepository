@@ -1,0 +1,36 @@
+
+
+pipeline {
+    agent{ dockerfile true }
+   
+   stages {
+       stage('Preparation') { // for display purposes
+      // Get some code from a GitHub repository
+      steps {
+        git credentialsId: 'GITHUB_CRED', url: 'https://github.com/nvramana8121/DemoRepository.git'
+      // Get the Maven tool.
+      // ** NOTE: This 'M3' Maven tool must be configured
+      // **       in the global configuration.        
+      }
+   }
+   stage('Build') {
+       
+      // Run the maven build
+      steps {
+           bat('mvn clean install')
+      }
+           
+         }
+      
+   
+   
+   stage('Results') {
+       steps {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          archiveArtifacts 'target/*.jar'
+       }
+    }
+   }
+   
+   
+}
